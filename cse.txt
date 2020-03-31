@@ -1,0 +1,173 @@
+#include<stdio.h>
+#include<iostream>
+using namespace std;
+class job{
+	public:
+	int pid;
+	int at;
+	int bt;
+	int cmpt;
+	int rbt;
+}f[100], s[100], merge[100];
+
+int  mc=0;
+int n,ttl_f=0,ttl_s=0;
+int quanta,map;
+
+ 
+void roundRobin () 
+{ 
+ 
+  int count,t,remain,flag=0; 
+   int time= merge[0].at, cc=0;
+	
+	while(time!=120 && cc!=mc){
+  
+  remain=mc; 
+  for(count=0;count<mc;count++) 
+  { 
+     
+    merge[count].rbt=merge[count].bt; 
+  } 
+
+  for(t=0,count=0;remain!=0;) 
+  { 
+    if(merge[count].rbt<=quanta && merge[count].rbt>0) 
+    { 
+      t+=merge[count].rbt; 
+      merge[count].rbt=0; 
+      merge[count].cmpt = t;
+				cc++;
+      flag=1; 
+    } 
+    else if(merge[count].rbt>0) 
+    { 
+      merge[count].rbt-=quanta; 
+      t+=quanta; 
+    } 
+    if(merge[count].rbt==0 && flag==1) 
+    { 
+      remain--; 
+      flag=0; 
+    } 
+    if(count==mc-1) 
+      count=0; 
+    else if(merge[count+1].at<=t) 
+      count++; 
+    else 
+      count=0; 
+  } 
+ 
+}
+}
+
+
+job merge_arrays(job f[], job s[],  job merge[], int ttl_f, int ttl_s)
+{
+    int i,j;
+    for(i = 0; i < ttl_f; i++)
+    {
+        merge[i] = f[i];
+    }
+    for(i = ttl_f, j = 0 ; i < ttl_f + ttl_s; i++, j++)
+    {
+        merge[i] = s[j];
+    }
+}
+
+
+void printer(){
+	int i=0, total=0, sum=0; 
+	double avg;
+	cout<<"\nDetailsof  the Execution\n";
+	printf("\nQuery ID\tArrival Ti0me\tRessolving Time\tCompletion Time\tTurn Around Time\tWaiting Time");
+	for(i; i<ttl_f; i++){
+		printf("\n%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t\t%d",
+		f[i].pid, (f[i].at), f[i].bt, (f[i].cmpt), (f[i].cmpt-f[i].at), ((f[i].cmpt-f[i].at)- f[i].bt));
+		total= f[i].cmpt;
+		sum+= (f[i].cmpt-f[i].at);
+	}
+	avg = sum/mc;
+	cout<<"\n\nTotal time Spent for all queries   "<< total;
+	cout<<"\nAverage query time:   "<< avg<<endl;
+	cout<<"\nProcess Execution Completed";
+}
+
+void input(){
+	int    t2;
+	cout<<"Enter total no of queries: ";
+	 cin>>n;
+	
+	if(n==0) { cout<<"\n No queries\n"; }
+	else{
+		cout<<"\nEnter time quantum for each Process: "; 
+		cin>>quanta;
+		cout<<"\nEnter 1 for faculty and 2 for student\n";
+		for(int i=0; i<n; i++){
+			cout<<"\nJob Type (1/2): "; cin>>map;
+			if(map==1){
+			
+				cout<<"Query Id: "; cin>>f[ttl_f].pid;
+				cout<<"Arrival Time: "; cin>>t2;
+				
+				if(t2<0 || t2>120){
+					cout<<"\nEnter Correct time";
+					
+				}
+				else{f[ttl_f].at= t2;}
+				cout<<"burst Time: "; cin>>f[ttl_f].bt;	 f[ttl_f].rbt= f[ttl_f].bt; 
+					ttl_f++;
+						
+			} 
+			else{
+				
+				cout<<"Query Id: "; cin>>s[ttl_s].pid;
+				cout<<"Arrival Time: "; cin>>t2; 
+				if(t2<0 || t2>120){
+					cout<<"\nEnter Correct time\n";
+					
+				}
+				else {s[ttl_s].at= t2; }
+				cout<<"burst Time: "; cin>>s[ttl_s].bt;	 s[ttl_s].rbt= s[ttl_s].bt;
+				ttl_s++;
+					
+			}
+		}
+	}
+	mc=ttl_f+ttl_s;
+}
+
+
+
+ main(){
+ 	cout<<"\nWelcome, please the give below rules "
+			"\n**>Enter time in given format -example for 10:30 am enter 1030\n"
+			"enter time now\n"
+			;
+int timea;
+ 	cin>>timea;
+ 	if(timea>=1000 && timea<=1200)
+ 	{
+ 	input();
+	 merge_arrays(f, s, merge,ttl_f,ttl_s);
+
+    for(int i = 0; i < ttl_f+ttl_s-1; i++)
+    {
+        for(int j = 0; j < ttl_f+ttl_s-i-1; j++)
+        {
+            if(merge[j].at> merge[j + 1].at)
+            {
+                job temp = merge[j];
+                merge[j ] = merge[j + 1];
+                merge[j + 1] =  temp;
+            }
+        }
+    }
+	roundRobin();
+	printer();
+}
+else
+{
+	cout<<" please log query only in the available timing slot i.e from 10 am to 12 am\n";
+}
+}
