@@ -80,12 +80,11 @@ void printer(){
 	int i=0, total=0, sum=0; 
 	double avg;
 	cout<<"\nDetailsof  the Execution\n";
-	printf("\nQuery ID\tArrival Ti0me\tRessolving Time\tCompletion Time\tTurn Around Time\tWaiting Time");
-	for(i; i<ttl_f; i++){
-		printf("\n%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t\t%d",
-		f[i].pid, (f[i].at), f[i].bt, (f[i].cmpt), (f[i].cmpt-f[i].at), ((f[i].cmpt-f[i].at)- f[i].bt));
-		total= f[i].cmpt;
-		sum+= (f[i].cmpt-f[i].at);
+	cout<<"\nQuery ID\tArrival Time\tburst Time \tCompletion Time\t\tTurn Around Time\t Waiting Time"<<endl;
+	for(i; i<mc; i++){
+		cout<<"  "<<merge[i].pid<<" \t \t"<<"  "<<(merge[i].at)<<" \t \t"<<"  "<<merge[i].bt<<" \t \t"<<"  "<<(merge[i].cmpt)<<" \t \t\t"<<"  "<<(merge[i].cmpt-merge[i].at)<<" \t\t\t\t"<<((merge[i].cmpt-merge[i].at)- merge[i].bt)<<endl;
+		total= merge[i].cmpt;
+		sum+= (merge[i].cmpt-merge[i].at);
 	}
 	avg = sum/mc;
 	cout<<"\n\nTotal time Spent for all queries   "<< total;
@@ -120,12 +119,10 @@ void input(){
 						
 			} 
 			else{
-				
 				cout<<"Query Id: "; cin>>s[ttl_s].pid;
 				cout<<"Arrival Time: "; cin>>t2; 
 				if(t2<0 || t2>120){
-					cout<<"\nEnter Correct time\n";
-					
+					cout<<"\nEnter Correct time\n";	
 				}
 				else {s[ttl_s].at= t2; }
 				cout<<"burst Time: "; cin>>s[ttl_s].bt;	 s[ttl_s].rbt= s[ttl_s].bt;
@@ -137,13 +134,10 @@ void input(){
 	mc=ttl_f+ttl_s;
 }
 
-
-
  main(){
  	cout<<"\nWelcome, please the give below rules "
 			"\n**>Enter time in given format -example for 10:30 am enter 1030\n"
-			"enter time now\n"
-			;
+			"enter time now\n";
 int timea;
  	cin>>timea;
  	if(timea>=1000 && timea<=1200)
@@ -161,13 +155,9 @@ int timea;
                 merge[j ] = merge[j + 1];
                 merge[j + 1] =  temp;
             }
-        }
-    }
-	roundRobin();
-	printer();
-}
+        }}
+roundRobin();
+	printer();}
 else
-{
-	cout<<" please log query only in the available timing slot i.e from 10 am to 12 am\n";
-}
+{cout<<" please log query only in the available timing slot i.e from 10 am to 12 am\n";}
 }
